@@ -473,18 +473,25 @@ public class Main extends JavaPlugin implements BedwarsAPI {
             String materialName = Main.getConfigurator().config.getString("resources." + spawnerN + ".material", "AIR");
             String colorName = Main.getConfigurator().config.getString("resources." + spawnerN + ".color", "WHITE");
 
+            List<String> materialNames = Main.getConfigurator().config.getStringList("resources." + spawnerN + ".materials");
+            List<Material> materials = new ArrayList<>();
+
+            for (String material : materialNames) {
+                materials.add(MaterialSearchEngine.find(materialName).getMaterial());
+            }
+
             if (damage != 0) {
                 materialName += ":" + damage;
             }
 
             MaterialSearchEngine.Result result = MaterialSearchEngine.find(materialName);
-            if (result.getMaterial() == Material.AIR) {
+            if (result.getMaterial() == Material.AIR && materials.isEmpty()) {
                 continue;
             }
 
             ChatColor color = ChatColor.valueOf(colorName);
             spawnerTypes.put(spawnerN.toLowerCase(), new ItemSpawnerType(spawnerN.toLowerCase(), name, translate,
-                    spread, result.getMaterial(), color, interval, result.getDamage()));
+                    spread, result.getMaterial(), materials, color, interval, result.getDamage()));
         }
 
         menu = new ShopInventory();

@@ -19,6 +19,7 @@
 
 package org.screamingsandals.bedwars.utils;
 
+import lombok.Getter;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
@@ -47,11 +48,12 @@ import java.util.stream.Collectors;
 import static org.screamingsandals.bedwars.lib.lang.I18n.i18nonly;
 
 public class MiscUtils {
+    @Getter
+    private static final Random rand = new Random();
     /**
      * From BedWarsRel
      */
     public static int randInt(int min, int max) {
-        Random rand = new Random();
         return rand.nextInt((max - min) + 1) + min;
     }
 

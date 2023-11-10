@@ -23,6 +23,9 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.screamingsandals.bedwars.utils.MiscUtils;
+
+import java.util.List;
 
 import static org.screamingsandals.bedwars.lib.lang.I18n.i18n;
 
@@ -32,17 +35,19 @@ public class ItemSpawnerType implements org.screamingsandals.bedwars.api.game.It
     private String translatableKey;
     private double spread;
     private Material material;
+    private List<Material> materials;
     private ChatColor color;
     private int interval;
     private int damage;
 
-    public ItemSpawnerType(String configKey, String name, String translatableKey, double spread, Material material,
+    public ItemSpawnerType(String configKey, String name, String translatableKey, double spread, Material material, List<Material> materials,
                            ChatColor color, int interval, int damage) {
         this.configKey = configKey;
         this.name = name;
         this.translatableKey = translatableKey;
         this.spread = spread;
         this.material = material;
+        this.materials = materials;
         this.color = color;
         this.interval = interval;
         this.damage = damage;
@@ -69,7 +74,7 @@ public class ItemSpawnerType implements org.screamingsandals.bedwars.api.game.It
     }
 
     public Material getMaterial() {
-        return material;
+        return material == null ? materials.get(0) : material;
     }
 
     public String getTranslatableKey() {
@@ -96,7 +101,17 @@ public class ItemSpawnerType implements org.screamingsandals.bedwars.api.game.It
     }
 
     public ItemStack getStack(int amount) {
-        ItemStack stack = new ItemStack(material, amount, (short) damage);
+        if (materials == null || materials.isEmpty()) {
+            ItemStack stack = new ItemStack(material, amount, (short) damage);
+            ItemMeta stackMeta = stack.getItemMeta();
+            stackMeta.setDisplayName(getItemName());
+            stack.setItemMeta(stackMeta);
+            return stack;
+        }
+
+        Material random = materials.get(MiscUtils.getRand().nextInt(materials.size()));
+
+        ItemStack stack = new ItemStack(random, amount, (short) damage);
         ItemMeta stackMeta = stack.getItemMeta();
         stackMeta.setDisplayName(getItemName());
         stack.setItemMeta(stackMeta);
