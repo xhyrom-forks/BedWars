@@ -477,7 +477,7 @@ public class Main extends JavaPlugin implements BedwarsAPI {
             List<Material> materials = new ArrayList<>();
 
             for (String material : materialNames) {
-                materials.add(MaterialSearchEngine.find(materialName).getMaterial());
+                materials.add(MaterialSearchEngine.find(material).getMaterial());
             }
 
             if (damage != 0) {
